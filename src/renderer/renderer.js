@@ -4,7 +4,7 @@ const axios = require('axios');
 const {TS} = require('../tradestation/ts');
 
 
-$(()=>{``
+$(()=>{
     addWindowButtons();
     windowBindings();
     isConnected();

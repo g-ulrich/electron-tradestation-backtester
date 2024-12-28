@@ -3,6 +3,7 @@ const {randNum, formatVolume, isMarketOpen, getRandomBoldRGBA} = require('./util
 const {SimpleTableData} = require('./datatables/simple');
 const { getOrderColumns } = require('./datatables/myColumns/orders');
 
+
 $(()=>{
     $('body div').hide();
     $('body loader').show();
@@ -21,6 +22,8 @@ class Main {
     constructor(){
        this.formBindings();
        this.formData = null;
+       
+     
     }
 
     safeExecute(code) {

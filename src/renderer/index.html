@@ -6,10 +6,19 @@
     <link href="./bootstrap-5.3.3/css/bootstrap.min.css" rel="stylesheet">
     <link href="./datatables/datatables.min.css" rel="stylesheet">
     <link href="./scrollbar.css" rel="stylesheet">
-    <!-- <script src="./codeMirror-5.65.18/lib/codemirror.css"></script>
-    <script src="./codeMirror-5.65.18/lib/codemirror.js"></script> -->
-    <!-- <script src="./codeMirror-5.65.18/mode/javascript/javascript.js"></script>
-    <link rel="stylesheet" href="./codeMirror-5.65.18/theme/monokai.css"> -->
+    <!-- Link to CodeMirror CSS files -->
+    <link rel="stylesheet" href="./codeMirror-5.65.18/lib/codemirror.css">
+    <!-- Optionally, include themes or additional styles -->
+    <link rel="stylesheet" href="./codeMirror-5.65.18/theme/darcula.css">
+
+    <!-- Include CodeMirror JavaScript files -->
+    <script src="./codeMirror-5.65.18/lib/codemirror.js"></script>
+
+    <!-- Include the JavaScript mode for the editor (in this case JavaScript) -->
+    <script src="./codeMirror-5.65.18/mode/javascript/javascript.js"></script>
+
+    <!-- Optionally, include other CodeMirror addons or keymaps -->
+    <script src="./codeMirror-5.65.18/keymap/sublime.js"></script>
 
     <title>electron-tradestation-backtester</title>
   </head>
@@ -74,31 +83,34 @@
             
             <div class="col-12">
                 <label for="codeTextarea" class="form-label  text-secondary">Code:</label>
-                <textarea style="max-height:200px;" class="form-control text-white  bg-dark border-dark" id="codeTextarea" rows="3"></textarea>
-                <!-- <style>
+                <textarea style="max-height:200px;" class="form-control text-white  bg-dark border-dark" id="codeTextarea" rows="3">
+// Write your JavaScript code here
+let x = 10;
+console.log(x);
+                </textarea>
+                <style>
                   .CodeMirror {
                       height: 200px;
                       border-radius: 5px;
+                      color: #fff;
+                      background-color: #212529;
+                  }
+                  .CodeMirror-gutter {
                       background-color: #212529;
                   }
               </style>
                 
                 <script>
-                      var glb_codeEditor = CodeMirror.fromTextArea(document.getElementById("codeTextarea"), {
-                          mode: "javascript",
-                          lineNumbers: true,
-                          theme: "monokai"
-                      });
-          
-                      // Set some sample JavaScript code
-                      glb_codeEditor.setValue(`
-                        function greet(name) {
-                            console.log(\`Hello, \${name}!\`);
-                        }
-                        
-                        greet("World");
-                        `);
-              </script> -->
+                  // Initialize CodeMirror
+                  var editor = CodeMirror.fromTextArea(document.getElementById("codeTextarea"), {
+                      lineNumbers: true,  // Show line numbers
+                      mode: "javascript", // Set the mode to JavaScript
+                      theme: "dracula",   // Optional: Set the theme
+                      tabSize: 2,         // Set tab size to 2 spaces
+                      indentUnit: 2,      // Indent using 2 spaces
+                      extraKeys: {"Ctrl-Space": "autocomplete"} // Enable autocompletion
+                  });
+              </script>
             </div>
             
             <div class="col-12 mt-3">
