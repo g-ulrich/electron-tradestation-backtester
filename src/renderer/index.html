@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <link href="./styles.css" rel="stylesheet">
+    <link href="./bootstrap-5.3.3/css/bootstrap.min.css" rel="stylesheet">
+    <link href="./datatables/datatables.min.css" rel="stylesheet">
+    <link href="./scrollbar.css" rel="stylesheet">
+    <!-- <script src="./codeMirror-5.65.18/lib/codemirror.css"></script>
+    <script src="./codeMirror-5.65.18/lib/codemirror.js"></script> -->
+    <!-- <script src="./codeMirror-5.65.18/mode/javascript/javascript.js"></script>
+    <link rel="stylesheet" href="./codeMirror-5.65.18/theme/monokai.css"> -->
+
+    <title>electron-tradestation-backtester</title>
+  </head>
+  <body class="bg-black">
+
+    <loader id="loader" class="center-div rounded p-3 text-white border h1 m-0 text-center" style="background-color:rgba(100,100,100,0.6);">
+      <img height="30" width="auto" style="margin-top:-5px;" class="rounded" src="../images/tradestation.png"/>radestation <i class="fa-solid fa-spinner fa-spin"></i>
+    </loader>
+
+    <internet id="internet" class="center-div d-none rounded py-2 px-3 text-danger h2 border" style="background-color:rgba(100,100,100,0.6);">
+      No Internet <i class="fa-solid fa-wifi"></i>
+    </internet>
+
+    <div class="container-fluid overflow-auto" style="height: calc(100vh - 27px);margin-top:27px;">
+      <h2 class="mb-2">Stock Trading Form</h2>
+     
+        <form class="row" id="stockForm">
+            <div class="col-2">
+                <label for="symbol" class="form-label text-secondary">Symbol:</label>
+                <input type="text" class="form-control  text-white  bg-dark border-dark" id="symbol" value="SPY" required>
+            </div>
+            
+            <div class="col-2">
+                <label for="interval" class="form-label  text-secondary">Interval:</label>
+                <select class="form-select  text-white  bg-dark border-dark" id="interval" required>
+                    <option class="text-white"value="1_Minute">1m</option>
+                    <option class="text-white"value="5_Minute">5m</option>
+                    <option class="text-white"value="10_Minute">10m</option>
+                    <option class="text-white"value="15_Minute">15m</option>
+                    <option class="text-white"value="30_Minute">30m</option>
+                    <option class="text-white"value="60_Minute">60m</option>
+                    <option class="text-white"value="1_Daily">1D</option>
+                    <option class="text-white"value="1_Weekly">1W</option>
+                    <option class="text-white"value="1_Monthly">1M</option>
+                </select>
+            </div>
+            
+            <div class="col-2">
+                <label for="sessiontemplate" class="form-label  text-secondary">Session:</label>
+                <select class="form-select text-white bg-dark border-dark" id="sessiontemplate" required>
+                    <option class="text-white"value="Default">Default</option>
+                    <option class="text-white"value="USEQ24Hour">USEQ24Hour</option>
+                    <option class="text-white"value="USEQPre">USEQPre</option>
+                    <option class="text-white"value="USEQPost">USEQPost</option>
+                </select>
+            </div>
+            
+            <div class="col-3">
+                <label for="firstdate" class="form-label  text-secondary">StartDate:</label>
+                <input type="date" class="form-control  text-white  bg-dark border-dark" value="" id="firstdate" required>
+            </div>
+            
+            <div class="col-4">
+                <label for="strategySelect" class="form-label  text-secondary">Strategy:</label>
+                <select class="form-select  text-white  bg-dark border-dark" id="strategySelect" required>
+                    <option class="text-white"value="">Select Strategy</option>
+                    <option class="text-white"value="long">Long Position</option>
+                    <option class="text-white"value="short">Short Position</option>
+                    <option class="text-white"value="neutral">Neutral</option>
+                </select>
+            </div>
+            
+            <div class="col-12">
+                <label for="codeTextarea" class="form-label  text-secondary">Code:</label>
+                <textarea style="max-height:200px;" class="form-control text-white  bg-dark border-dark" id="codeTextarea" rows="3"></textarea>
+                <!-- <style>
+                  .CodeMirror {
+                      height: 200px;
+                      border-radius: 5px;
+                      background-color: #212529;
+                  }
+              </style>
+                
+                <script>
+                      var glb_codeEditor = CodeMirror.fromTextArea(document.getElementById("codeTextarea"), {
+                          mode: "javascript",
+                          lineNumbers: true,
+                          theme: "monokai"
+                      });
+          
+                      // Set some sample JavaScript code
+                      glb_codeEditor.setValue(`
+                        function greet(name) {
+                            console.log(\`Hello, \${name}!\`);
+                        }
+                        
+                        greet("World");
+                        `);
+              </script> -->
+            </div>
+            
+            <div class="col-12 mt-3">
+              <button id="submit" type="submit" class="btn btn-primary">Submit</button>
+            </div>
+          </form>
+    
+  </div>
+
+    <script src="./fontawesome/js/fontawesome.min.js"></script>
+    <script src="./fontawesome/js/all.min.js"></script>
+    <script src="./renderer.js"></script>
+    <script src="./index.js"></script>
+    
+  </body>
+</html>

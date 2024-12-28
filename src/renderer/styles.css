@@ -1,0 +1,59 @@
+.center-div {
+  top:50%;
+  left:50%;
+  transform: translate(-50%, -50%);
+  z-index:99999;
+  position: absolute;
+}
+
+.vflex {
+  display: flex;
+  flex-direction: column; 
+  justify-content: space-between;
+  position: relative; 
+  height: 100vh;
+}
+
+.vgrow {
+  flex-grow: 1; 
+}
+
+.vno-grow {
+  flex-grow: 0; 
+}
+
+.flex {
+    position: relative;
+    display: flex;
+    justify-content: space-between; /* Distributes items evenly across the main axis */
+}
+.grow {
+    flex-grow: 1;
+}
+.no-grow {
+    flex-grow: 0;
+}
+
+/* Window buttons */
+.Win-btn {
+    -webkit-app-region: no-drag;
+   font-size: .7rem;
+    border: none;
+    background: transparent;
+    outline: none;
+    color: rgba(255,255,255,0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%; 
+  }
+  
+  .Win-btn:hover {
+    background: rgba(221, 221, 221, 0.2);
+    color: rgba(255,255,255,1);
+    cursor:pointer;
+  }
+
+  #closeBtn:hover {
+    background-color:rgba(255, 0, 0, 0.8) !important;
+  }
