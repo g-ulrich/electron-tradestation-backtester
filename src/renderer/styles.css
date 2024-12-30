@@ -6,6 +6,12 @@
   position: absolute;
 }
 
+.disabled-click {
+  pointer-events: none;
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 .vflex {
   display: flex;
   flex-direction: column; 

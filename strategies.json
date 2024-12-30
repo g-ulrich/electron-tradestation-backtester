@@ -1,14 +1,3 @@
 {
-  "data": [
-    {
-      "id": "_60236",
-      "name": "testing",
-      "code": "let x = 10;\nconsole.log(x);\n                "
-    },
-    {
-      "id": "_94660",
-      "name": "testing",
-      "code": "let x = 10;\nconsole.log(x);\n                "
-    }
-  ]
+  "data": []
 }

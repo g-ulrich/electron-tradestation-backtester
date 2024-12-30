@@ -22,15 +22,33 @@ class Main {
     constructor(){
        this.formBindings();
        this.formData = null;
-       
+       this.strategies = [];
+    this.getStrategies();
+    }
+
+    getStrategies(){
+        var selectedStrategy = $("#strategySelect option:selected");
         ipcRenderer.once('sendStrategies', (event, arg) => {
-             if (arg?.data) {
-               console.log(arg.data);
-             } else {
-               console.log(arg);
-             }
-           });
-           ipcRenderer.send('getStrategies');
+            if (arg?.data) {
+                this.strategies = arg?.data;
+                $("#strategySelect").empty();
+                arg.data.forEach((item)=>{
+                    $("#strategySelect").append(`<option class="text-white" value="${item?.name}" data-id="${item?.id}" ${$("#strategyName").val() == item?.name ? 'selected' : ''}>${item?.name}</option>`);
+                });
+                if (arg?.data.length < 1) {
+                    this.strategies = [];
+                    $("#strategySelect").append(`<option class="text-white" value="New" data-id="_1234" selected>New</option>`);
+                    $("#strategyName").val("New");
+                    glb_codeEditor.setValue("// Start new Strategy");
+                } else {
+                    selectedStrategy = $("#strategySelect option:selected");
+                $("#strategyName").val(selectedStrategy.text());
+                    var matchingObj = arg?.data.filter(strategy => strategy.id === selectedStrategy.attr('data-id'));
+                    glb_codeEditor.setValue(matchingObj[0].code);
+                }
+            }
+        });
+        ipcRenderer.send('getStrategies');
     }
 
     safeExecuteTest(code) {
@@ -48,12 +66,36 @@ class Main {
     saveStrategy(){
         ipcRenderer.once('sendSaveStreategy', (event, arg) => {
             if (arg?.data) {
-                console.log(arg.data);
-            } else {
-                console.log(arg);
+                this.getStrategies();
+                setTimeout(()=>{
+                    $("#SaveCode").empty();
+                    $("#SaveCode").append("Save");
+                },700);
             }
         });
-        ipcRenderer.send('getSaveStrategy', {name: "testing", code: glb_codeEditor.getValue()});
+        const selectedStrategy = $("#strategySelect option:selected");
+        const selectedId = selectedStrategy.attr("data-id");
+        var newStrat = $("#strategyName").val() != selectedStrategy.text() ? true : false;
+        $("#SaveCode").empty();
+        $("#SaveCode").append('<i class="fa-solid fa-spinner fa-spin"></i> Saving...');
+        ipcRenderer.send('getSaveStrategy', {id: newStrat ? "" : selectedId, name: $("#strategyName").val(), code: glb_codeEditor.getValue()});
+    }
+
+    deleteStrategy(){
+        ipcRenderer.once('sendDeleteStreategy', (event, arg) => {
+            if (arg?.data) {
+                this.getStrategies();
+                setTimeout(()=>{
+                    $("#DeleteCode").empty();
+                    $("#DeleteCode").append("Delete");
+                },700);
+            }
+        });
+        const selectedStrategy = $("#strategySelect option:selected");
+        const selectedId = selectedStrategy.attr("data-id");
+        $("#DeleteCode").empty();
+        $("#DeleteCode").append('<i class="fa-solid fa-spinner fa-spin"></i> Deleting...');
+        ipcRenderer.send('getDeleteStrategy', {id: selectedId});
     }
 
     formBindings(){
@@ -70,8 +112,8 @@ class Main {
                 }
                 
             });
+            self.safeExecuteTest(formData?.code);
             console.log(formData);
-            self.safeExecute(formData?.code);
             self.formData = formData
         });
 
@@ -101,6 +143,10 @@ class Main {
         });
         $("#SaveCode").on('click', ()=>{
             self.saveStrategy();
+            $("#SaveCode").addClass('disabled-click');
+            setTimeout(() => {
+                $("#SaveCode").removeClass('disabled-click');
+            }, 700);
         });
         $("#testCode").on('click', ()=>{
             const btnFunc = (passObj) =>{
@@ -110,7 +156,7 @@ class Main {
                 setTimeout(()=>{
                     $("#testCode").empty();
                     $("#testCode").append(`<i class="fa-solid fa-vial"></i> Test`);
-                    $("#codeErr").text(''); 
+                    
                 }, 10000);
             }
             btnFunc();
@@ -118,6 +164,25 @@ class Main {
             var pass = self.safeExecuteTest(code);
             setTimeout(()=>{
                 btnFunc(pass);
+            }, 700);
+            $("#testCode").addClass('disabled-click');
+            setTimeout(() => {
+                $("#testCode").removeClass('disabled-click');
+            }, 700);
+            
+        });
+        $("#strategySelect").change(function() {
+            const selectedStrategy = $("#strategySelect option:selected");
+            const selectedId = selectedStrategy.attr("data-id");
+            $("#strategyName").val(selectedStrategy.text());
+            var matchingObj = self.strategies.filter(strategy => strategy.id === selectedId);
+            glb_codeEditor.setValue(matchingObj[0].code);
+          });
+        $("#DeleteCode").on('click', ()=>{
+            self.deleteStrategy();
+            $("#DeleteCode").addClass('disabled-click');
+            setTimeout(() => {
+                $("#DeleteCode").removeClass('disabled-click');
             }, 700);
         });
     }

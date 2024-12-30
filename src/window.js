@@ -38,21 +38,54 @@ class Strategy{
         }
       }
 
-    saveStartegy(name, code){
+    deleteStrategy(arg){
+        var incomingId = arg?.id;
+        try {
+            if (incomingId != "") {
+                var json = this.readStrategyFile();
+                if (json?.data) {
+                    var updatedData = json?.data.filter(strategy => strategy.id != incomingId);
+                    this.writeStrategyFile({data: updatedData});
+                }
+            }
+            return {success: true, error: error};
+        } catch (error) {
+            return {success: false, error: error};
+        }
+    }
+
+    saveStrategy(arg){
+        var incomingId = arg?.id;
+        var incomingName = arg?.name;
+        var incomingCode = arg?.code;
+        console.log(arg);
         try {
             if (fs.existsSync(this.path)) {
                 var json = this.readStrategyFile();
-                if (json?.data) {
-                    var oldData = json?.data;
-                    this.writeStrategyFile({data: [...oldData, {id: `_${randNum(1000, 100000)}`, name: name, code}]});
+                // new strategy
+                if (incomingId == "") {
+                    // append to the array
+                    if (json?.data || json?.data.length > 0) {
+                        // any matching names?
+                        var matchingNames = json?.data.filter(strategy => strategy.name === incomingName);
+                        var appendNum = matchingNames.length > 0 ? `_${randNum(10, 100)}` : ''
+                        this.writeStrategyFile({data: [...json?.data, {id: `_${randNum(1000, 100000)}`, name: incomingName + appendNum, code: incomingCode}]});
+                    } else {
+                        this.writeStrategyFile({data: [{id: `_${randNum(1000, 100000)}`, name: incomingName, code: incomingCode}]});
+                    }
                     return {success: true, error: ""};
                 } else {
-                    this.writeStrategyFile({data: [{id: `_${randNum(1000, 100000)}`, name: name, code}]});
+                    // append to the array
+                    if (json?.data || json?.data.length > 0) {
+                        // any matching names?
+                        var dataWithoutId = json?.data.filter(strategy => strategy.id != incomingId);
+                        var updatedStrat = {id: incomingId, name: incomingName, code: incomingCode};
+                        this.writeStrategyFile({data: [...dataWithoutId, updatedStrat]});
+                    } else {
+                        this.writeStrategyFile({data: [{id: incomingId, name: incomingName, code: incomingCode}]});
+                    }
                     return {success: true, error: ""};
                 }
-            } else {
-                this.writeStrategyFile({data: [{id: `_${randNum(1000, 100000)}`, name: name, code}]});
-                return {success: true, error: ""};
             }
         } catch (error) {
             return {success: false, error: error};
@@ -108,8 +141,12 @@ class Window {
             event.reply('sendStrategies', {data: arr});
         });
         ipcMain.on('getSaveStrategy', async (event, arg) => {
-            var pass = this.strategy.saveStartegy(arg?.name, arg?.code);
+            var pass = this.strategy.saveStrategy(arg);
             event.reply('sendSaveStreategy', {data: pass});
+        });
+        ipcMain.on('getDeleteStrategy', async (event, arg) => {
+            var pass = this.strategy.deleteStrategy(arg);
+            event.reply('sendDeleteStreategy', {data: pass});
         });
 
         // WINDOW
