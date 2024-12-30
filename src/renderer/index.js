@@ -23,7 +23,14 @@ class Main {
        this.formBindings();
        this.formData = null;
        
-     
+        ipcRenderer.once('sendStrategies', (event, arg) => {
+             if (arg?.data) {
+               console.log(arg.data);
+             } else {
+               console.log(arg);
+             }
+           });
+           ipcRenderer.send('getStrategies');
     }
 
     safeExecuteTest(code) {
@@ -36,6 +43,17 @@ class Main {
         } catch (error) {
             return {success: false, error: error};
         }
+    }
+
+    saveStrategy(){
+        ipcRenderer.once('sendSaveStreategy', (event, arg) => {
+            if (arg?.data) {
+                console.log(arg.data);
+            } else {
+                console.log(arg);
+            }
+        });
+        ipcRenderer.send('getSaveStrategy', {name: "testing", code: glb_codeEditor.getValue()});
     }
 
     formBindings(){
@@ -57,6 +75,33 @@ class Main {
             self.formData = formData
         });
 
+        $("#strategyCodeInfo").on('click', ()=>{
+            alert(`/**
+* Avaiable strategy variables and information.
+*
+* @param {String} buy - "buy"
+* @param {String} sell - "sell"
+* @param {String} hold - "hold"
+* @param {Object} df - The historical dataframe 
+*               @param {String} Open
+*               @param {String} High
+*               @param {String} Low
+*               @param {String} Close
+*               @param {String} TotalVolume
+*               @param {String} Timestamp 
+*               @param {Integer} Epoch - (e.g. 1604523600000)
+*               @param {Integer} TotalTicks
+*               @param {Integer} DownTicks
+*               @param {Integer} UpTicks
+*               @param {Integer} UpVolume
+*               @param {Integer} DownVolume
+* @param {Object} pos - The current position {}
+* returns {String} buy sell or hold
+*/`);
+        });
+        $("#SaveCode").on('click', ()=>{
+            self.saveStrategy();
+        });
         $("#testCode").on('click', ()=>{
             const btnFunc = (passObj) =>{
                 $("#testCode").empty();

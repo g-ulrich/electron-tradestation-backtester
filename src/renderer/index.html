@@ -82,30 +82,17 @@
             </div>
             
             <div class="col-12">
-                <label for="strategyCode" class="form-label  text-secondary">Code:</label>
+                <label id="strategyCodeLabel" for="strategyCode" class="form-label my-1 text-secondary"><i class="fa-solid fa-circle-info"></i> Code:</label>
+                <div id="strategyCodeInfo" class="btn btn-sm btn-secondary float-end"><i class="fa-solid fa-circle-info"></i></div>
                 <textarea style="max-height:200px;" class="form-control text-white  bg-dark border-dark pb-1" id="strategyCode" rows="3">
-/**
-* The strategy which returns a signal for trading the current candle in an array.
-* @param {String} buy - "buy"
-* @param {String} sell - "sell"
-* @param {String} hold - "hold"
-* @param {Object} df - The historical dataframe 
-*        {Open String, 
-*          High String, 
-*         Low String, 
-*          Close String, 
-*          TotalVolume String, 
-*          Timestamp String, 
-*          Epoch Integer (e.g. 1604523600000)}
-* @param {Object} pos - The current position {}
-* returns {String} buy sell or hold
-*/
 let x = 10;
 console.log(x);
                 </textarea>
                 <div id="codeErr" class="text-danger pb-1"></div>
                 <div class="flex pb-1">
                   <div id="testCode" class="no-grow btn btn-sm btn-secondary" title="test"><i class="fa-solid fa-vial"></i> Test</div>
+                  <div id="SaveCode" class="no-grow btn btn-sm btn-success" title="save">Save</div>
+
                 </div>
                 <style>
                   .CodeMirror {
