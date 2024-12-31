@@ -1,3 +1,9 @@
 {
-  "data": []
+  "data": [
+    {
+      "id": "_75529",
+      "name": "testing",
+      "code": "var close = bars.Close[index];\nvar old = bars.Close[index - 2];\nif (index % 2==0) {\n\treturn BUY;\n} else {\n  return SELL;\n}"
+    }
+  ]
 }

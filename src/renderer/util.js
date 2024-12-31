@@ -171,7 +171,7 @@ const isCurTimeDivisibleByMinsWithTolerance = (min, sec) => {
 }
 
 
-const generateAlphaNumString = (n) => {
+function randStr (n) {
   const alphanumericChars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
   let randomString = '';
 
@@ -682,8 +682,22 @@ function formatDateWithPrecision(dateString) {
   return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}.${milliseconds}Z`;
 }
 
+function openNewTab(url, urlParams) {
+  // Get the current page's URL
+  const currentPageUrl = url; //window.location.href;
+
+  // Remove any existing query parameters
+  const baseUrl = currentPageUrl.split('?')[0];
+
+  // Construct the new URL with parameters
+  const newUrl = `${baseUrl}?${new URLSearchParams(urlParams).toString()}`;
+
+  // Open the new tab
+  window.open(newUrl, '_blank');
+}
 
 module.exports = {
+  openNewTab,
   resolveHtmlPath,
   hhmmss,
   currentESTDatetime,
@@ -699,7 +713,7 @@ module.exports = {
   generateRandomData,
   strHas,
   isCurTimeDivisibleByMinsWithTolerance,
-  generateAlphaNumString,
+  randStr,
   YTDInDays,
   ESTToGMT,
   GMTtoEST,

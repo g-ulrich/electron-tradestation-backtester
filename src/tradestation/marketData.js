@@ -166,84 +166,118 @@ class MarketData {
    * @param {string} [sessiontemplate='Default'] - United States (US) stock market session templates. USEQPre, USEQPost, USEQPreAndPost, USEQ24Hour,Default.
    * @returns {Promise<object>} - Promise resolving to the fetched marketdata bars.
    */
-  async getBars(symbol, params) {
-    this.refreshToken();
-    const interval = params?.interval || '1';
-    const unit = params?.unit || 'Daily';
-    const barsback = params?.barsback || '1';
-    const firstdate = params?.firstdate || '';
-    const lastdate = params?.lastdate || new Date().toISOString();
-    const sessiontemplate = params?.sessiontemplate || 'Default';
 
-    const url = `${this.baseUrl}/barcharts/${symbol}`;
-    const options = {
-      params: {
-        interval,
-        unit,
-        barsback,
-        // firstdate,
-        // lastdate,
-        sessiontemplate,
-      },
-      headers: {
-        Authorization: `Bearer ${this.accessToken}`,
-      },
+  async getBars(params){
+    const url = `${this.baseUrl}/barcharts/${params?.symbol}`;
+    var parameters = {
+      interval: params?.interval || "1",   // The interval in minutes (e.g., '1' for 1-minute intervals)
+      unit: params?.unit || "Minute",       // The time unit (e.g., 'Daily', 'Minute')
+      sessiontemplate: params?.sessiontemplate || "Default" // 
     };
-
-    try {
-      const response = await axios.get(url, options);
-      const bars = response.data.Bars;
-
-      const newBars = bars.map((bar)=>{
-        return this.fixBar(bar);
-      });
-      return newBars;
-    } catch (error) {
-      this.error(`getBars() - ${error}`);
-      throw error;
+    if (params?.barsback) {
+      parameters["barsback"] = params?.barsback; // 1 to 57,600
+    }else if (params?.firstdate) {
+      parameters["firstdate"] = params?.firstdate; // YYYY-MM-DD, 2020-04-20T18:00:00Z
+    } else {
+      parameters["barsback"] = "10"; // 1 to 57,600
     }
-  }
-
-  async getBarsByLastDate(symbol, params) {
-    this.refreshToken();
-    const url = `${this.baseUrl}/barcharts/${symbol}`;
-    const options = {
-      params: {
-        interval: params?.interval || '1',
-        unit: params?.unit || 'Daily',
-        barsback: params?.barsback || '1',
-        // firstdate,
-        lastdate: params?.lastdate || new Date().toISOString(),
-        sessiontemplate: params?.sessiontemplate || 'Default'
-      },
-      headers: {
-        Authorization: `Bearer ${this.accessToken}`,
-      },
-    };
-    try {
-      const response = await axios.get(url, options);
-      const bars = response.data.Bars;
-
-      const newBars = bars.map((bar)=>{
-        return this.fixBar(bar);
-      });
-      return newBars;
-    } catch (error) {
-      this.error(`getBarsByLastDate() - ${error}`);
-      throw error;
-    }
-  }
-
-  setBars(setter, symbol, params){
-    (async () => {
-      try {
-        const arr = await this.getBars(symbol, params);
-        setter(arr);
-      } catch (error) {
-        this.error(`setBars() ${error}`);
+    var options = {
+      params: parameters,
+      headers : {
+        Authorization: `Bearer ${this.accessToken}`, // Add the Bearer token
       }
-    })();
+    }
+    try {
+      const response = await axios.get(url, options);
+      const bars = response.data.Bars;
+
+      const newBars = bars.map((bar)=>{
+        return this.fixBar(bar);
+      });
+      return newBars;
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
   }
+
+  // async getBars(symbol, params) {
+  //   this.refreshToken();
+  //   const interval = params?.interval || '1';
+  //   const unit = params?.unit || 'Daily';
+  //   const barsback = params?.barsback || '1';
+  //   const firstdate = params?.firstdate || '';
+  //   const lastdate = params?.lastdate || new Date().toISOString();
+  //   const sessiontemplate = params?.sessiontemplate || 'Default';
+
+  //   const url = `${this.baseUrl}/barcharts/${symbol}`;
+  //   const options = {
+  //     params: {
+  //       interval,
+  //       unit,
+  //       barsback,
+  //       // firstdate,
+  //       // lastdate,
+  //       sessiontemplate,
+  //     },
+  //     headers: {
+  //       Authorization: `Bearer ${this.accessToken}`,
+  //     },
+  //   };
+
+  //   try {
+  //     const response = await axios.get(url, options);
+      // const bars = response.data.Bars;
+
+      // const newBars = bars.map((bar)=>{
+      //   return this.fixBar(bar);
+      // });
+      // return newBars;
+  //   } catch (error) {
+  //     this.error(`getBars() - ${error}`);
+  //     throw error;
+  //   }
+  // }
+
+  // async getBarsByLastDate(symbol, params) {
+  //   this.refreshToken();
+  //   const url = `${this.baseUrl}/barcharts/${symbol}`;
+  //   const options = {
+  //     params: {
+  //       interval: params?.interval || '1',
+  //       unit: params?.unit || 'Daily',
+  //       barsback: params?.barsback || '1',
+  //       // firstdate,
+  //       lastdate: params?.lastdate || new Date().toISOString(),
+  //       sessiontemplate: params?.sessiontemplate || 'Default'
+  //     },
+  //     headers: {
+  //       Authorization: `Bearer ${this.accessToken}`,
+  //     },
+  //   };
+  //   try {
+  //     const response = await axios.get(url, options);
+  //     const bars = response.data.Bars;
+
+  //     const newBars = bars.map((bar)=>{
+  //       return this.fixBar(bar);
+  //     });
+  //     return newBars;
+  //   } catch (error) {
+  //     this.error(`getBarsByLastDate() - ${error}`);
+  //     throw error;
+  //   }
+  // }
+
+  // setBars(setter, symbol, params){
+  //   (async () => {
+  //     try {
+  //       const arr = await this.getBars(symbol, params);
+  //       setter(arr);
+  //     } catch (error) {
+  //       this.error(`setBars() ${error}`);
+  //     }
+  //   })();
+  // }
 
   setCandles(setter, symbol, params){
     (async () => {

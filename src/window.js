@@ -115,7 +115,7 @@ class Strategy{
 class Window {
     constructor(width, height){
         this.w = width || 1200;
-        this.h = height || 800;
+        this.h = height || 1000;
         this.mainWindow;
         this.indexPath = path.join(__dirname, '/renderer/index.html');
         this.iconPath = path.join(__dirname, '/images/icon.png');

@@ -34,94 +34,101 @@
 
     <div class="container-fluid overflow-auto" style="height: calc(100vh - 27px);margin-top:27px;">
      <div class="row">
-      <div class="col-sm-12 col-lg-6 p-0">
+      <div id="formContainer" class="col-sm-12 col-lg-6 p-0">
         <div class="container-fluid">
-        <form class="row" id="stockForm">
-          <div class="col-2">
-              <label for="symbol" class="form-label text-secondary">Symbol:</label>
-              <input type="text" class="form-control  text-white  bg-dark border-dark" id="symbol" value="SPY" required>
-          </div>
-          
-          <div class="col-2">
-              <label for="interval" class="form-label  text-secondary">Interval:</label>
-              <select class="form-select  text-white  bg-dark border-dark" id="interval" required>
-                  <option class="text-white"value="1_Minute">1m</option>
-                  <option class="text-white"value="5_Minute">5m</option>
-                  <option class="text-white"value="10_Minute">10m</option>
-                  <option class="text-white"value="15_Minute">15m</option>
-                  <option class="text-white"value="30_Minute">30m</option>
-                  <option class="text-white"value="60_Minute">60m</option>
-                  <option class="text-white"value="1_Daily">1D</option>
-                  <option class="text-white"value="1_Weekly">1W</option>
-                  <option class="text-white"value="1_Monthly">1M</option>
-              </select>
-          </div>
-          
-          <div class="col-2">
-              <label for="sessiontemplate" class="form-label  text-secondary">Session:</label>
-              <select class="form-select text-white bg-dark border-dark" id="sessiontemplate" required>
-                  <option class="text-white"value="Default">Default</option>
-                  <option class="text-white"value="USEQ24Hour">USEQ24Hour</option>
-                  <option class="text-white"value="USEQPre">USEQPre</option>
-                  <option class="text-white"value="USEQPost">USEQPost</option>
-              </select>
-          </div>
-          
-          <div class="col-3">
-              <label for="firstdate" class="form-label  text-secondary">StartDate:</label>
-              <input type="date" class="form-control  text-white  bg-dark border-dark" value="" id="firstdate" required>
-          </div>
-          
-          <div class="col-4">
-              <label for="strategySelect" class="form-label  text-secondary">Strategy:</label>
-              <select class="form-select text-white  bg-dark border-dark" id="strategySelect" required>
-              </select>
-              
-          </div>
-          
-          <div class="col-12">
-              <label id="strategyCodeInfo" style="cursor:pointer;" for="strategyCode" class="form-label my-1 text-secondary"><i class="fa-solid fa-circle-info"></i> Code:</label>
-              <textarea style="max-height:200px;" class="form-control text-white  bg-dark border-dark pb-1" id="strategyCode" rows="3"></textarea>
-              <div id="codeErr" class="text-danger pb-1"></div>
-              <div class="flex gap-1 pb-1">
-                <div id="testCode" class="no-grow btn  btn-secondary" title="test" style="white-space:nowrap;"><i class="fa-solid fa-vial"></i> Test</div>
-                <div class="grow"></div>
-                <div class="no-grow">
-                  <input id="strategyName" type="text" class="form-control text-white bg-dark border-dark" value=""/>
-                </div>                  
-                <div id="SaveCode" class="no-grow btn btn-success" style="white-space:nowrap;" title="save">Save</div>
-                <div id="DeleteCode" class="no-grow btn btn-danger" style="white-space:nowrap;" title="delete">Delete</div>
-              </div>
-              <style>
-                .CodeMirror {
-                    height: 200px;
-                    border-radius: 5px;
-                    color: #fff;
-                    background-color: #212529;
-                }
-                .CodeMirror-gutter {
-                    background-color: #212529;
-                }
-            </style>
-              
-              <script>
-                // Initialize CodeMirror
-                var glb_codeEditor = CodeMirror.fromTextArea(document.getElementById("strategyCode"), {
-                    lineNumbers: true,  // Show line numbers
-                    mode: "javascript", // Set the mode to JavaScript
-                    theme: "dracula",   // Optional: Set the theme
-                    tabSize: 2,         // Set tab size to 2 spaces
-                    indentUnit: 2,      // Indent using 2 spaces
-                    extraKeys: {"Ctrl-Space": "autocomplete"} // Enable autocompletion
-                });
-            </script>
-          </div>
-          
-          <div class="col-12 mt-3">
-            <button id="submit" type="submit" class="btn btn-primary">Submit</button>
-          </div>
-        </form>
+          <form class="row" id="stockForm">
+            <h3 class="text-secondary col-12 mt-2">Form <span id="closeForm" class="float-end btn btn-sm btn-secondary"><i class="fa-solid fa-angle-down"></i></span></h3>
+
+            <div class="col-2">
+                <label for="symbol" class="form-label text-secondary">Symbol:</label>
+                <input type="text" class="form-control  text-white  bg-dark border-dark" id="symbol" value="SPY" required>
+            </div>
+            
+            <div class="col-2">
+                <label for="interval" class="form-label  text-secondary">Interval:</label>
+                <select class="form-select  text-white  bg-dark border-dark" id="interval" required>
+                    <option class="text-white"value="1_Minute">1m</option>
+                    <option class="text-white"value="5_Minute">5m</option>
+                    <option class="text-white"value="10_Minute">10m</option>
+                    <option class="text-white"value="15_Minute">15m</option>
+                    <option class="text-white"value="30_Minute">30m</option>
+                    <option class="text-white"value="60_Minute">60m</option>
+                    <option class="text-white"value="1_Daily">1D</option>
+                    <option class="text-white"value="1_Weekly">1W</option>
+                    <option class="text-white"value="1_Monthly">1M</option>
+                </select>
+            </div>
+            
+            <div class="col-2">
+                <label for="sessiontemplate" class="form-label  text-secondary">Session:</label>
+                <select class="form-select text-white bg-dark border-dark" id="sessiontemplate" required>
+                    <option class="text-white"value="Default">Default</option>
+                    <option class="text-white"value="USEQ24Hour">USEQ24Hour</option>
+                    <option class="text-white"value="USEQPre">USEQPre</option>
+                    <option class="text-white"value="USEQPost">USEQPost</option>
+                </select>
+            </div>
+            
+            <div class="col-3">
+                <label for="firstdate" class="form-label  text-secondary">StartDate:</label>
+                <input type="date" class="form-control  text-white  bg-dark border-dark" value="" id="firstdate">
+            </div>
+            
+            <div class="col-4">
+                <label for="strategySelect" class="form-label  text-secondary">Strategy:</label>
+                <select class="form-select text-white  bg-dark border-dark" id="strategySelect" required>
+                </select>
+                
+            </div>
+            
+            <div class="col-12">
+                <label id="strategyCodeInfo" style="cursor:pointer;" for="strategyCode" class="form-label my-1 text-secondary"><i class="fa-solid fa-circle-info"></i> Code:</label>
+                <textarea style="max-height:200px;" class="form-control text-white  bg-dark border-dark pb-1" id="strategyCode" rows="3"></textarea>
+                <div id="codeErr" class="text-danger pb-1"></div>
+                <div class="flex gap-1 pb-1">
+                  <div id="testCode" class="no-grow btn  btn-secondary" title="test" style="white-space:nowrap;"><i class="fa-solid fa-vial"></i> Test</div>
+                  <div class="grow"></div>
+                  <div class="no-grow">
+                    <input id="strategyName" type="text" class="form-control text-white bg-dark border-dark" value=""/>
+                  </div>                  
+                  <div id="SaveCode" class="no-grow btn btn-success" style="white-space:nowrap;" title="save">Save</div>
+                  <div id="DeleteCode" class="no-grow btn btn-danger" style="white-space:nowrap;" title="delete">Delete</div>
+                </div>
+                <style>
+                  .CodeMirror {
+                      height: 200px;
+                      border-radius: 5px;
+                      color: #fff;
+                      background-color: #212529;
+                  }
+                  .CodeMirror-gutter {
+                      background-color: #212529;
+                  }
+              </style>
+                
+                <script>
+                  // Initialize CodeMirror
+                  var glb_codeEditor = CodeMirror.fromTextArea(document.getElementById("strategyCode"), {
+                      lineNumbers: true,  // Show line numbers
+                      mode: "javascript", // Set the mode to JavaScript
+                      theme: "dracula",   // Optional: Set the theme
+                      tabSize: 2,         // Set tab size to 2 spaces
+                      indentUnit: 2,      // Indent using 2 spaces
+                      extraKeys: {"Ctrl-Space": "autocomplete"} // Enable autocompletion
+                  });
+              </script>
+            </div>
+            
+            <div class="col-12 mt-3">
+              <div id="submitBtn" type="submit" style="white-space:nowrap;" class="btn btn-primary">Submit</div>
+            </div>
+          </form>
+        </div>
       </div>
+      <div id="backtestContainer" class="col-sm-12 col-lg-6 position-relative">
+        
+        <h3 class="text-secondary m-0 p-0 mt-2">Backtest<span id="closeBacktest" class="float-end btn btn-sm btn-secondary"><i class="fa-solid fa-angle-down"></i></span></h3>
+        <div id="chart1" class="bg-dark rounded my-2 d-none w-100 text-white" ></div>
       </div>
      </div>
         

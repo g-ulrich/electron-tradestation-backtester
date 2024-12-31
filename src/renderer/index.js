@@ -1,7 +1,7 @@
-const {AccountDoughnutChart, PositionsPieChart} = require("./chartjs/pies");
-const {randNum, formatVolume, isMarketOpen, getRandomBoldRGBA} = require('./util');
-const {SimpleTableData} = require('./datatables/simple');
-const { getOrderColumns } = require('./datatables/myColumns/orders');
+// const {AccountDoughnutChart, PositionsPieChart} = require("./chartjs/pies");
+const {Backtest} = require('./backtests');
+// const {SimpleTableData} = require('./datatables/simple');
+// const { getOrderColumns } = require('./datatables/myColumns/orders');
 
 
 $(()=>{
@@ -16,12 +16,19 @@ $(()=>{
         console.log(error);
         $('body loader').fadeOut();
     });
+    $("#closeForm").on('click', ()=>{
+        $("#closeForm svg").toggleClass(`fa-angle-up fa-angle-down`);
+        $("#stockForm div").toggleClass('d-none');
+    });
+    $("#closeBacktest").on('click', ()=>{
+        $("#closeBacktest svg").toggleClass(`fa-angle-up fa-angle-down`);
+        $("#backtestContainer div").toggleClass('d-none');
+    });
 });
 
 class Main {
     constructor(){
        this.formBindings();
-       this.formData = null;
        this.strategies = [];
     this.getStrategies();
     }
@@ -53,10 +60,32 @@ class Main {
 
     safeExecuteTest(code) {
         try {
-            const buy = "buy";
-            const sell = "sell";
-            const hold = "hold";
-            eval(code);
+            const bars = {
+                BarStatus: [],
+                Close:[],
+                DownTicks:[],
+                DownVolume:[],
+                Epoch: [],
+                High: [],
+                IsEndOfHistory: [],
+                IsRealtime: [],
+                Low: [],
+                Open: [],
+                OpenInterest: [],
+                TimeStamp: [],
+                TotalTicks: [],
+                TotalVolume : [],
+                UnchangedTicks: [],
+                UnchangedVolume: [],
+                UpTicks: [],
+                UpVolume: []};
+            const df = {};
+            const BUY = "buy";
+            const SELL = "sell";
+            const HOLD = "hold";
+            const index = 0;
+            const getSignal = eval(`(function(){${code}})`);
+            getSignal();
             return {success: true, error: ""};
         } catch (error) {
             return {success: false, error: error};
@@ -100,43 +129,66 @@ class Main {
 
     formBindings(){
         const self = this;
-        $('#stockForm').submit(function(e) {
-            e.preventDefault();
+        $(document).keydown(function(event) {
+            if (event.ctrlKey && event.key === 's') {
+              event.preventDefault(); // Prevent default save action
+              $("#SaveCode").click();
+            }
+          });
+        $('#submitBtn').on('click', () => {
+            $("#submitBtn").empty().append('<i class="fa-solid fa-spinner fa-spin"></i>').addClass('disabled-click');
+            setTimeout(() => {
+                $("#submitBtn").removeClass('disabled-click');
+                $("#submitBtn").empty().append('Submit');
+            }, 700);
             var formData = {};
             $('#stockForm').find('*[id]').each(function() {
                 var id = $(this).attr('id');
                 if (id == "strategyCode"){
                     formData[id] = glb_codeEditor.getValue();
+                } else if (id == "firstdate" && $(`#${id}`).val() != "") {
+                    formData[id] = $(`#${id}`).val();
+                } else if (id == "interval") {
+                    formData[id] = $(`#${id}`).val().split("_")[0];
+                    formData["unit"] = $(`#${id}`).val().split("_")[1];
                 } else {
                     formData[id] = $(`#${id}`).val();
                 }
-                
             });
-            self.safeExecuteTest(formData?.code);
-            console.log(formData);
-            self.formData = formData
+            var pass = self.safeExecuteTest(formData?.code);
+            if (pass.success){
+                new Backtest(formData);
+            }else{
+                // runs test and shows errors.
+                $("#testCode").click();
+            }
         });
 
         $("#strategyCodeInfo").on('click', ()=>{
             alert(`/**
 * Avaiable strategy variables and information.
 *
+* @param {Integer} index - current loop index
 * @param {String} buy - "buy"
 * @param {String} sell - "sell"
 * @param {String} hold - "hold"
-* @param {Object} df - The historical dataframe 
-*               @param {String} Open
-*               @param {String} High
-*               @param {String} Low
-*               @param {String} Close
-*               @param {String} TotalVolume
-*               @param {String} Timestamp 
-*               @param {Integer} Epoch - (e.g. 1604523600000)
-*               @param {Integer} TotalTicks
-*               @param {Integer} DownTicks
-*               @param {Integer} UpTicks
-*               @param {Integer} UpVolume
-*               @param {Integer} DownVolume
+* @param {Object} df - DataFrame class
+*               @function {Integer} length()
+*               @function {Object} getByIndex(index)
+*               @function {Object} getRowRange(startIndex, endIndex)
+* @param {Object} bars - The historical dataframe 
+*               @param {Array} Open
+*               @param {Array} High
+*               @param {Array} Low
+*               @param {Array} Close
+*               @param {Array} TotalVolume
+*               @param {Array} Timestamp 
+*               @param {Array} Epoch - (e.g. 1604523600000)
+*               @param {Array} TotalTicks
+*               @param {Array} DownTicks
+*               @param {Array} UpTicks
+*               @param {Array} UpVolume
+*               @param {Array} DownVolume
 * @param {Object} pos - The current position {}
 * returns {String} buy sell or hold
 */`);
@@ -189,4 +241,3 @@ class Main {
 
 
 }
-
